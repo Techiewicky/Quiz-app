@@ -2,6 +2,80 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# New Features/Adjustments Added! 🎉
+## Progress Bar
+- **Files Added**: `ProgressBar.js` and `ProgressBar.css`
+- **Purpose**: Shows your progress as you answer questions in real-time.
+
+**ProgressBar.js**:
+```jsx
+import React from 'react';
+import './ProgressBar.css';
+
+const ProgressBar = ({ currentQuestion, totalQuestions }) => {
+  const progress = (currentQuestion / totalQuestions) * 100;
+  return (
+    <div className="progress-bar-container">
+      <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+    </div>
+  );
+};
+
+export default ProgressBar;
+```
+
+**ProgressBar.css**:
+```css
+.progress-bar-container {
+  width: 100%;
+  background-color: #e0e0df;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 10px;
+  background-color: #76c7c0;
+  border-radius: 5px;
+  transition: width 0.3s;
+}
+```
+
+---
+
+## Timer
+- **Purpose**: A 2-minute countdown timer that ends the quiz automatically when time runs out.
+
+**Code Snippet**:
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function Quiz() {
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      alert('Time is up!');
+      // Logic to disable quiz submission
+    }
+  }, [timeLeft]);
+
+  return (
+    <div>
+      <div>Time Left: {timeLeft} seconds</div>
+      {/* Your existing quiz content */}
+    </div>
+  );
+}
+
+export default Quiz;
+```
+
+---
+
 ## Available Scripts
 
 In the project directory, you can run:

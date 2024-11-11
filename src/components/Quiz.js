@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Question from './Question';
 import Result from './Result';
+import ProgressBar from './ProgressBar';
 import './Quiz.css';
 
 const questions = [
@@ -64,11 +65,27 @@ function Quiz() {
     const [answers, setAnswers] = useState(Array(questions.length).fill(null));
     const [showResult, setShowResult] = useState(false);
     const [score, setScore] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    //This is the Timer Component for the Quizt The EXTRA CREDIT
+    const [timeLeft, setTimeLeft] = useState(120);
+    useEffect(() => {
+        if (timeLeft > 0) {
+            const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+            return () => clearTimeout(timer);
+        } else {
+            alert('Time is up!');
+            setShowResult(true);
+        }
+    }, [timeLeft]);
 
     const handleAnswerOptionClick = (questionIndex, isCorrect) => {
         const newAnswers = [...answers];
         newAnswers[questionIndex] = isCorrect;
         setAnswers(newAnswers);
+
+        if (questionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(questionIndex + 1);
+        }
     };
 
     const handleSubmit = () => {
@@ -83,6 +100,11 @@ function Quiz() {
                 <Result score={score} totalQuestions={questions.length} />
             ) : (
                 <div>
+                    <div>Time Left: {timeLeft} seconds</div>
+                    <ProgressBar
+                        currentQuestion={answers.filter(answer => answer !== null).length}
+                        totalQuestions={questions.length}
+                    />
                     {questions.map((question, index) => (
                         <Question
                             key={index}
